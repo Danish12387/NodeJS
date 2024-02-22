@@ -8,10 +8,18 @@ router.get('/', (req, res) => {
     res.send({message: 'Products fetched successfully!', products})
 })
 
-products.map((item)=>{
-    router.get(`/${item.id}`, (req, res) => {
-        res.send(item)
-    })
+// products.map((item)=>{
+//     router.get(`/${item.id}`, (req, res) => {
+//         res.send(item)
+//     })
+// })
+
+router.get('/:id', (req, res) => {
+   products.map((item)=>{
+    if(req.params.id === item.id) {
+       res.send(item)
+    }
+   })
 })
 
 export default router;
