@@ -1,14 +1,10 @@
 import express from 'express';
 import products from './products.mjs';
-
+import ads from './ads.mjs';
 
 const router = express.Router();
 
-
 router.use('/products', products);
-
-router.use('/', (req, res) => {
-    res.send({message: "This is localhost 3001"});
-})
+router.use('/ads', ads);
 
 export default router;
