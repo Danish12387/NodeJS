@@ -45,9 +45,10 @@ router.put('/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
-        const updatedAd = Ads.findOneAndUpdate(
+        const updatedAd = await Ads.findOneAndUpdate(
             { _id: id },
-            req.body
+            req.body,
+            {new: true}
         );
 
         if (!updatedAd) {
