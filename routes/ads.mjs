@@ -4,8 +4,30 @@ import Ads from '../models/Ads.mjs';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    const ads = await Ads.find();
-    res.send({ message: 'Ads fetched successfully', data: ads })
+    try {
+        const ads = await Ads.find();
+        if (!ads) {
+            res.status(404).send({ message: "Ads not found!" })
+        }
+        res.send({ message: 'Ads fetched successfully', data: ads })
+    }
+    catch (e) {
+        res.status(500).send({ message: e.message })
+    }
+})
+
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const singleAd = await Ads.findById(id);
+        if (!singleAd) {
+            res.status(404).send({ message: "Ad not found!" })
+        }
+        res.send({ message: "Ad fetched successfully", singleAd: singleAd });
+    }
+    catch (e) {
+        res.status(500).send({ message: e.message })
+    }
 })
 
 router.post('/post', async (req, res) => {
@@ -25,9 +47,8 @@ router.put('/:id', async (req, res) => {
     try {
         const updatedAd = Ads.findOneAndUpdate(
             { _id: id },
-            req.body,
-            { new: true }
-        ).lean()
+            req.body
+        );
 
         if (!updatedAd) {
             req.status(404).send({ message: 'Ad not found!' });
