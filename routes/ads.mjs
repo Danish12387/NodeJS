@@ -16,19 +16,30 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
-    const { id } = req.params;
+// router.get('/:id', async (req, res) => {
+//     const { id } = req.params;
+//     try {
+//         const singleAd = await Ads.findById(id);
+//         if (!singleAd) {
+//             res.status(404).send({ message: "Ad not found!" })
+//         }
+//         res.send({ message: "Ad fetched successfully", singleAd: singleAd });
+//     }
+//     catch (e) {
+//         res.status(500).send({ message: e.message })
+//     }
+// })
+
+router.get('/:some', async (req, res) => {
+    const { some } = req.params;
+    
     try {
-        const singleAd = await Ads.findById(id);
-        if (!singleAd) {
-            res.status(404).send({ message: "Ad not found!" })
-        }
-        res.send({ message: "Ad fetched successfully", singleAd: singleAd });
+        const something = await Ads.find({ title: { $regex: `^${some}`, $options: 'i' } })
+        res.send({ message: 'Ad fetched successfully', data: something });
+    } catch (e) {
+        res.send({ message: e.message });
     }
-    catch (e) {
-        res.status(500).send({ message: e.message })
-    }
-})
+});
 
 router.post('/post', async (req, res) => {
     try {
@@ -48,7 +59,7 @@ router.put('/:id', async (req, res) => {
         const updatedAd = await Ads.findOneAndUpdate(
             { _id: id },
             req.body,
-            {new: true}
+            { new: true }
         );
 
         if (!updatedAd) {
