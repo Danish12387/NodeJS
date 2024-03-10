@@ -41,8 +41,13 @@ router.post('/login', async (req, res) => {
             res.send({ message: 'Invalid Password!' })
             return
         }
-        
-        res.send({ message: "User logged in successfully!" });
+
+        // Generate Token:
+        const token = user.generateToken();
+        user.tokens.push(token);
+        await user.save();
+
+        res.send({ message: "User logged in successfully!", token: token });
     }
     catch (e) {
         res.send({ message: e.message });
