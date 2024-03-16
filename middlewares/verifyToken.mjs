@@ -19,6 +19,10 @@ async function verifyToken(req, res, next) {
             return;
         }
 
+        if (decoded._id !== req.body.userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
         req.userId = decoded._id;
         req.tokenToRemove = token;
         next();
