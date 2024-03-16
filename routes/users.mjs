@@ -1,5 +1,6 @@
 import express from 'express';
 import Users from '../models/Users.mjs';
+import verifyToken from '../middlewares/verifyToken.mjs';
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.post('/register', async (req, res) => {
     }
 })
 
-router.post('/login', async (req, res) => {
+router.put('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await Users.findOne({ email });
@@ -52,6 +53,11 @@ router.post('/login', async (req, res) => {
     catch (e) {
         res.send({ message: e.message });
     }
+})
+
+router.put('/logout', verifyToken,async (req, res) => {
+    await Users.findByIdAndUpdate(req.userId, { $pull: { tokens: req.tokenToRemove }});
+    res.send({ message: 'Logged Out Successfully!'})
 })
 
 export default router;
